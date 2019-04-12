@@ -1,0 +1,74 @@
+---
+title: "Individual Assignment 1"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+setwd("C:/Users/Rohit/Documents/Spring Sem 2/Data mining/Assignment 1")
+dfKK <- read.csv("Individual Assignment 1 Airline Data v2.csv")
+dfKK$FARE<-gsub(pattern="\\$",replacement="",x=dfKK$FARE)
+dfKK$FARE <- as.integer(dfKK$FARE)
+dfKK$S_INCOME<-gsub(pattern="\\$",replacement="",x=dfKK$S_INCOME)
+dfKK$S_INCOME<-gsub(pattern=",",replacement="",x=dfKK$S_INCOME)
+dfKK$S_INCOME <- as.integer(dfKK$S_INCOME)
+dfKK$E_INCOME<-gsub(pattern="\\$",replacement="",x=dfKK$E_INCOME)
+dfKK$E_INCOME<-gsub(pattern=",",replacement="",x=dfKK$E_INCOME)
+dfKK$E_INCOME <- as.integer(dfKK$E_INCOME)
+
+
+##Question 1a
+fit<-lm(FARE~COUPON+NEW+VACATION+SW+HI+S_INCOME+E_INCOME+S_POP+E_POP+SLOT+GATE+DISTANCE+PAX,data=dfKK)
+summary(fit)
+```
+```{r}
+##Question 1c
+fit2<-lm(FARE~COUPON+NEW+VACATION+SW+HI+S_INCOME+E_INCOME+S_POP+E_POP+SLOT+GATE+DISTANCE+PAX,data=dfKK)
+newdata <- data.frame(COUPON = 1, NEW = 3, VACATION = "No" , SW ="No" , HI =6000, S_INCOME = 2000, E_INCOME = 2000, S_POP = 4000000, E_POP=7150000, SLOT="Free", GATE ="Constrained" , DISTANCE = 1000, PAX = 6000)
+pred<-predict(fit2,newdata)
+pred
+```
+```{r}
+##Question 2a
+num<-sapply(dfKK,is.numeric)
+pairs(dfKK[,num],main="Scatterplot Matrix")
+attach(dfKK)
+new_dfKK<-dfKK[c(5,9,10,11,12,13,16,17,18)]
+pairs(new_dfKK)
+```
+```{r}
+##Question 2b
+library(ggplot2)
+ggplot(data=dfKK)+aes(x=DISTANCE,y=FARE,color = SW)+geom_point()+theme_minimal()
+```
+```{r}
+##Question 2c
+library(corrplot)
+corr<-cor(dfKK[,num],use="complete.obs")
+corr
+```
+```{r}
+##Question 3
+fit3<- lm(FARE~SW,data=dfKK)
+summary(fit3)
+```
+```{r}
+##Question 4
+fit5<- lm(FARE~COUPON+NEW+VACATION+SW+(SW*VACATION)+HI+S_INCOME+E_INCOME+S_POP+E_POP+SLOT+GATE+DISTANCE+PAX,data=dfKK)
+summary(fit5)
+
+```
+```{r}
+##Question 5
+fit4<- lm(FARE~COUPON+NEW+VACATION+SW+HI+S_POP+E_POP+S_INCOME+E_INCOME+DISTANCE+PAX,data=dfKK)
+summary(fit4)
+```
+```{r}
+fit6<-lm(FARE~COUPON+NEW+VACATION+SW+HI+S_POP+E_POP+DISTANCE+PAX,data=dfKK)
+summary(fit6)
+```
+
+```
+
